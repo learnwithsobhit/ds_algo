@@ -1,3 +1,17 @@
+use clap::Parser;
+
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Array of numbers
+    #[arg(long, value_delimiter = ',')]
+    arr: Vec<i32>,
+
+    /// K value
+    #[arg(short, long)]
+    k: usize,
+}
+
 fn quick_sort_nth_element(arr: &mut [i32], left: usize, right: usize, k: usize) -> i32 {
     if left == right {
         return arr[left];
@@ -25,9 +39,16 @@ fn partition(arr: &mut [i32], left: usize, right: usize) -> usize {
 }
 
 fn main() {
-    let mut arr = [3, 2, 1, 5, 4];
+    let args = Args::parse();
+    let mut arr = args.arr;
+    let k = args.k;
+
+    if arr.is_empty() {
+        println!("Please provide an array using --arr");
+        return;
+    }
+
     let right = arr.len() - 1;
-    let k = std::env::args().nth(1).unwrap().parse::<usize>().unwrap();
     if k > right {
         println!("k is out of bounds");
     } else if k == 0 {
